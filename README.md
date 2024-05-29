@@ -24,6 +24,13 @@ Sure, here’s the revised branching strategy using a `develop` branch instead o
    - Developers create feature branches from the `develop` branch.
    - Naming example: `feature/awesome-feature`.
    - Feature branches are merged into the `develop` branch once they are tested and approved.
+  
+
+
+
+
+
+
 
 2. **Develop Integration Testing**
    - The `develop` branch contains all features that are being tested in an integration environment.
@@ -284,3 +291,23 @@ By following this method, you ensure that:
 - **CI/CD Pipelines**: Ensure that both `develop` and `main` branches have CI/CD pipelines configured to run automated tests and deployment steps.
 
 By using this merge strategy, you maintain the integrity of ongoing development work while incorporating necessary updates from production, creating a robust and efficient workflow.
+
+
+
+
+
+
+apk add --no-cache \
+    ca-certificates \
+    less \
+    ncurses-terminfo-base \
+    krb5-libs \
+    libgcc \
+    libintl \
+    libssl3 \
+    libstdc++ \
+    tzdata \
+    userspace-rcu \
+    zlib \
+    icu-libs \
+    curl
