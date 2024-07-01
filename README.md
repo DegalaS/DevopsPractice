@@ -233,11 +233,98 @@ Provide contact details for support and further assistance.
 - Phone: [Insert Phone]
 
 ---
+### Application Installation Guide Template
+
+---
+
+**Project Name:** [Insert Project Name]  
+**Version:** [Insert Version]  
+**Date:** [Insert Date]  
+**Author:** [Insert Author]
+
+---
+
+## Table of Contents
+
+1. Introduction
+2. Environment Details
+3. Server Details
+4. Login Credentials
+5. Build Procedure
+6. Deployment Procedure
+7. Backup Process
+8. Contact Information
+
+---
+
+### 1. Introduction
+
+Provide a brief overview of the application, its purpose, and any relevant background information.
+
+### 2. Environment Details
+
+| Environment Name     | Purpose                     | URL                       |
+|----------------------|-----------------------------|---------------------------|
+| Development          | Internal development/testing| http://dev.example.com    |
+| Production           | Live user access            | http://www.example.com    |
+
+### 3. Server Details
+
+| Server Name          | IP Address    | Role               | Operating System       | Specific Configurations                  |
+|----------------------|---------------|--------------------|------------------------|-------------------------------------------|
+| app-server-01        | 192.168.1.1   | Application Server | Windows Server 2019    | [List of installed software, versions]    |
+| db-server-01         | 192.168.1.2   | Database Server    | Ubuntu 20.04           | [List of installed software, versions]    |
+
+### 4. Login Credentials
+
+| Server/Service       | Username      | Password           | Access Level           |
+|----------------------|---------------|--------------------|------------------------|
+| Application Server   | appadmin      | P@ssw0rd           | Admin                  |
+| Database Server      | dbadmin       | D@tabase2021       | Admin                  |
+
+### 5. Build Procedure
+
+| Step | Description                                                                 |
+|------|-----------------------------------------------------------------------------|
+| 1    | Ensure Java JDK 11 is installed.                                            |
+| 2    | Clone the repository: `git clone https://github.com/example/repo.git`       |
+| 3    | Navigate to the project directory: `cd repo`                                |
+| 4    | Build the project using Maven: `mvn clean install`                          |
+| 5    | Verify the build output in the `target` directory.                          |
+
+### 6. Deployment Procedure
+
+| Step | Description                                                                 |
+|------|-----------------------------------------------------------------------------|
+| 1    | Copy the build artifact `app.war` to the application server.                |
+| 2    | Stop the existing application service: `systemctl stop app`                 |
+| 3    | Deploy the new artifact: `cp app.war /opt/app/`                             |
+| 4    | Start the application service: `systemctl start app`                        |
+| 5    | Verify the deployment by accessing the URL: http://dev.example.com          |
+
+### 7. Backup Process
+
+| Step | Description                                                                 |
+|------|-----------------------------------------------------------------------------|
+| 1    | Backup the database using pg_dump: `pg_dump -U dbadmin -h 192.168.1.2 dbname > backup.sql` |
+| 2    | Copy the application files to the backup directory: `cp -r /opt/app /backup/` |
+| 3    | Verify the backup files exist in `/backup/` directory.                      |
+
+### 8. Contact Information
+
+| Name               | Email              | Phone              |
+|--------------------|--------------------|--------------------|
+| [Insert Name]      | [Insert Email]     | [Insert Phone]     |
+
+---
 
 ### Appendix
 
 Include any additional information or resources that may be helpful, such as diagrams, screenshots, or links to relevant documentation.
 
 ---
+
+This template should be customized to fit the specific requirements of your application and deployment process.
+
 
 This template should be customized to fit the specific requirements of your application and deployment process.
