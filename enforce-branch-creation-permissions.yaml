@@ -1,0 +1,62 @@
+trigger:
+- none
+
+parameters:
+- name: targetProject
+  displayName: Target Project Name
+  type: string
+  default: ''
+
+jobs:
+- job: RestrictBranchCreation
+  displayName: Restrict Branch Creation
+  pool:
+    vmImage: 'windows-latest'
+
+  steps:
+  - script: |
+      echo ## Setting up Azure DevOps CLI
+      az extension add --name azure-devops
+
+      echo ## Authenticating Azure DevOps CLI
+      az devops configure --defaults organization=https://dev.azure.com/$(targetProject)
+
+      echo ## Getting list of repositories
+      repos=$(az repos list --project $(targetProject) --query "[].name" -o tsv)
+
+      echo ## Repositories in the project:
+      echo $repos
+
+      for repo in $repos
+      do
+        echo ## Setting branch permissions for repository $repo
+
+        # Block the Create Branch permission at the repository root for the project's contributors
+        tf git permission /deny:CreateBranch /group:[$(targetProject)]\Contributors /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo
+
+        # Allow contributors to create branches under feature and users
+        tf git permission /allow:CreateBranch /group:[$(targetProject)]\Contributors /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:feature
+        tf git permission /allow:CreateBranch /group:[$(targetProject)]\Contributors /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:users
+
+        # Allow DevOps Team to create branches under feature, bugfix, hotfix, master, develop, and release
+        tf git permission /allow:CreateBranch /group:[$(targetProject)]\DevOps Team /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:feature
+        tf git permission /allow:CreateBranch /group:[$(targetProject)]\DevOps Team /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:bugfix
+        tf git permission /allow:CreateBranch /group:[$(targetProject)]\DevOps Team /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:hotfix
+        tf git permission /allow:CreateBranch /group:[$(targetProject)]\DevOps Team /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:master
+        tf git permission /allow:CreateBranch /group:[$(targetProject)]\DevOps Team /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:develop
+        tf git permission /allow:CreateBranch /group:[$(targetProject)]\DevOps Team /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:release
+
+        # Allow Project Administrators to create branches under feature, bugfix, hotfix, master, develop, and release
+        tf git permission /allow:CreateBranch /group:"[$(targetProject)]\Project Administrators" /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:feature
+        tf git permission /allow:CreateBranch /group:"[$(targetProject)]\Project Administrators" /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:bugfix
+        tf git permission /allow:CreateBranch /group:"[$(targetProject)]\Project Administrators" /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:hotfix
+        tf git permission /allow:CreateBranch /group:"[$(targetProject)]\Project Administrators" /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:master
+        tf git permission /allow:CreateBranch /group:"[$(targetProject)]\Project Administrators" /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:develop
+        tf git permission /allow:CreateBranch /group:"[$(targetProject)]\Project Administrators" /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:release
+
+        # Allow administrators to create a branch called main (in case it ever gets accidentally deleted)
+        tf git permission /allow:CreateBranch /group:"[$(targetProject)]\Project Administrators" /collection:https://dev.azure.com/$(targetProject)/ /teamproject:$(targetProject) /repository:$repo /branch:main
+      done
+    displayName: 'Set Branch Permissions'
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
